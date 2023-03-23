@@ -11,24 +11,28 @@ pH_8=subset(Data,treatment_id=="C8")
 
 
 # Temperature Stress
-"18C"=subset(Data, treatment_id=="CD18")
-"23C"=subset(Data, treatment_id=="CD23")
-"37C"=subset(Data, treatment_id=="HS37")
-"42C"=subset(Data, treatment_id=="HS42")
-"48C"=subset(Data, treatment_id=="HS48")
+C18=subset(Data, treatment_id=="CD18")
+C23=subset(Data, treatment_id=="CD23")
+C37=subset(Data, treatment_id=="HS37")
+C42=subset(Data, treatment_id=="HS42")
+C48=subset(Data, treatment_id=="HS48")
+
 
 # Osmolarity Stress
 NaCl=subset(Data, treatment_id=="NC")
 KCl=subset(Data, treatment_id=="KC")
 
 # Control
-
 UT=subset(Data, treatment_id=="UT")
 
 
-pHDat=rbind(pH_3, pH_5, pH_7, pH_8, UT)
-TempDat=rbind("18C", "23C", "37C", "42C", "48C", UT)
-OsmoDat=rbind(NaCl, KCl, UT)
-write.csv(pHDat, file="pHDat.csv")
-write.csv(TempDat, file="TempDat.csv")
-write.csv(OsmoDat, file="OsmoDat.csv")
+pHDat=rbind(pH_3, pH_5, pH_7, pH_8)
+TempDat=rbind(C18, C23, C37, C42, C48)
+OsmoDat=rbind(NaCl, KCl)
+Control=(UT)
+
+
+MergeDat=rbind(pHDat, TempDat, OsmoDat, Control)
+MergeDat
+
+write.csv(MergeDat, file="MergeDat.csv")
