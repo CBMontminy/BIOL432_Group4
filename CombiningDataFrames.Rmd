@@ -1,0 +1,82 @@
+---
+title: "Combining Dataframes"
+author: "Braeden Grenier"
+date: "2023-03-23"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(ggplot2)
+library(dplyr)
+library(tidyverse)
+library(lubridate)
+library(tidyr)
+library(data.table)
+library(gridExtra)
+library(lmtest)
+library(MuMIn)
+library(MASS)
+library(stringr)
+
+library(rentrez)
+library(genbankr)
+library(ape)
+library(ggtree)
+```
+
+```{r}
+library(vegan)
+```
+
+## Loading and checking the dataframes
+```{r}
+OsmoDat = read.csv("OsmoDat.csv")
+pHDat = read.csv("pHDat.csv")
+TempDat = read.csv("TempDat.csv")
+
+head(OsmoDat)
+head(pHDat)
+head(TempDat)
+
+str(OsmoDat)
+str(pHDat)
+str(TempDat)
+```
+
+## Merging the Dataframes
+```{r}
+tot1 = merge (x = OsmoDat, y= pHDat, all = TRUE)
+head(tot1)
+
+tot = merge(x = tot1, y = TempDat, all = TRUE)
+head(tot)
+tail(tot)
+unique(tot$treatment_id)
+
+tot3 = merge(x = OsmoDat, y = pHDat, z = TempDat, all = TRUE)
+head(tot3)
+print(tot3)
+unique(tot3$treatment_id)
+unique(tot3$X)
+str(tot3)
+grep(tot3$treatment_id, "18C")
+
+unique(tot$treatment_id)
+unique(tot$gene)
+```
+
+## making a new csv
+```{r}
+write.csv(tot, file = "CombinedData")
+str(CombinedData)
+```
+
+```{r}
+CD = read.csv("CombinedData.csv")
+head(CD)
+```
+
