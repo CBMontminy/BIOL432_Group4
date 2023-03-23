@@ -12,4 +12,4 @@ Instructions
 3. Divide each cell in the row by row sum 
 4. Multiply each cell by constant (ex: max number of reads across all rows)
 5. Perform NMDS
-6. Cluster by treatment. 
+6. Cluster by treatment.  
