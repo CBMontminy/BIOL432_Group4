@@ -6,6 +6,7 @@ output: html_document
 ---
 
 
+
 Instructions
 1. Create count matrix (use genes)
 2. Sum each count for each row 
@@ -13,3 +14,51 @@ Instructions
 4. Multiply each cell by constant (ex: max number of reads across all rows)
 5. Perform NMDS
 6. Cluster by treatment.  
+
+## Loading packages
+```{r, echo=F}
+library(tidyr)
+library(dplyr)
+```
+
+## Loading Data
+```{r}
+Data=read.csv("CombinedData")
+```
+
+# Converting abundance to count
+## Back-transforming log2 data to original abundance values
+```{r}
+Count= 2^(Data$abundance_log2)
+```
+
+## Adding non-normalized data to dataframe
+```{r}
+CountDat=cbind(Data, Count)
+CountDat=select(CountDat, c("gene", "treatment_id", "Count"))
+names(CountDat)=c("Gene", "Treatment", "Count")
+```
+
+# Averaging replicates (Gene under same treatment)
+```{r}
+AvgDat= CountDat %>%
+  group_by(Gene, Treatment) %>%
+  summarize(AvgCount=mean(Count))
+AvgDat$AvgCount=round(AvgDat$AvgCount)
+```
+
+
+
+
+# Convert to count matrix
+## Reshape dataframe to have genes as rows and treatments as columns
+```{r}
+WideDat=AvgDat %>%
+  pivot_wider(names_from="Treatment", values_from="AvgCount")
+```
+
+## Creating count matrix
+```{r}
+
+```
+
