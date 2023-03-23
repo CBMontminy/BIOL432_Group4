@@ -10,4 +10,3 @@ CombinedData<-Data[Data$treatment_id == "C3"|Data$treatment_id =="C5"|
                      Data$treatment_id =="HS37"|Data$treatment_id =="HS42"|
                      Data$treatment_id =="HS48"|Data$treatment_id =="NC"|
                      Data$treatment_id =="KC"|Data$treatment_id =="UT",]
-
