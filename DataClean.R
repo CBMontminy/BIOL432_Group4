@@ -19,3 +19,5 @@ CombinedData<-na.omit(CombinedData)
 
 #check to see that some rows have been removed
 dim(CombinedData)
+
+write.csv(CombinedData)
