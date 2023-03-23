@@ -1,0 +1,15 @@
+---
+title: "Bible 2.0"
+author: "Marin H"
+date: "2023-03-23"
+output: html_document
+---
+
+
+Instructions
+1. Create count matrix (use genes)
+2. Sum each count for each row 
+3. Divide each cell in the row by row sum 
+4. Multiply each cell by constant (ex: max number of reads across all rows)
+5. Perform NMDS
+6. Cluster by treatment. 
