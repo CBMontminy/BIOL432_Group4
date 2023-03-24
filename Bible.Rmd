@@ -57,8 +57,5 @@ WideDat=AvgDat %>%
   pivot_wider(names_from="Treatment", values_from="AvgCount")
 ```
 
-## Creating count matrix
-```{r}
 
-```
 
