@@ -48,8 +48,6 @@ AvgDat$AvgCount=round(AvgDat$AvgCount)
 ```
 
 
-
-
 # Convert to count matrix
 ## Reshape dataframe to have genes as rows and treatments as columns
 ```{r}
@@ -57,5 +55,43 @@ WideDat=AvgDat %>%
   pivot_wider(names_from="Treatment", values_from="AvgCount")
 ```
 
+# Seperate out character and numeric data
+```{r}
+# Create all numeric data frame
+NumericData <- as.data.frame(WideDat[,2:8])
+row.names(NumericData) <-  WideDat$Gene # keep unique identifiers
+```
 
+# Genereate distance matrix
+```{r}
+library(vegan) # load vegdist()
+
+# create dissimilarity matrix
+DistanceMatrix <- vegdist(NumericData, method="bray", binary=F)
+```
+
+# Run NMDS
+```{r}
+set.seed(39)
+NMDSdat <- metaMDS(DistanceMatrix, k=2, trymax = 10) # need to change 10 to a higher number, but keep low for testing
+```
+
+# Select relevant columns 
+```{r}
+Plot_NMDS <- data.frame(NMDS1 = NMDSdat$points[,1],
+                   NMDS2 = NMDSdat$points[,2],
+                   Gene = row.names(NumericData))
+```
+
+# Add labels using merge function
+```{r}
+Plot_NMDS <- merge(Plot_NMDS, AvgDat, by = "Gene", all.x=T, all.y=F)
+```
+
+# Plot NMDS results 
+```{r}
+ggplot(Plot_NMDS, aes(x = NMDS1, y = NMDS2, colour=Treatment)) +
+  geom_point() +
+  theme(legend.position="right")
+```
 
