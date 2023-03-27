@@ -1,0 +1,43 @@
+---
+title: "For Loop"
+author: "Corbin Montminy"
+date: "2023-03-27"
+output: html_document
+---
+
+# Loading Data
+```{r}
+Data=read.csv("CombinedData.csv")
+Data=select(Data, c("gene", "treatment_id", "abundance_log2"))
+names(Data)=c("Gene", "Treatment", "Abundance")
+```
+
+
+```{r}
+GeneList=unique(Data$Gene)
+Ngenes=length(GeneList)
+OutVec=data.frame(
+  Gene=rep(GeneList),
+  p=rep(NA, Ngenes)
+)
+```
+
+
+```{r}
+for(row in 1:Ngenes){
+TempDat=data.frame(log2c=Data$Abundance[Data$Gene==GeneList[row]],
+                  Treatment=Data$Treatment[Data$Gene==GeneList[row]])
+TempMod=lm(log2c ~ Treatment, data=TempDat)
+OutVec$p[row] =anova(TempMod)[[5]][1]
+TempDat=NA
+TempMod=NA
+}
+```
+
+
+
+pbinom(2^Treat1 Count,2^T1 + 2^T2, p=0.5)
+```{r}
+WideDat$PC3C8=pbinom(2^WideDat$C3, 2^WideDat$C3+2^WideDat$C8, p=0.5)
+```
+
