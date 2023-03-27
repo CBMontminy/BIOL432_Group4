@@ -9,7 +9,7 @@ df_mean <- data %>%
   group_by(systematic_name, gene, treatment_id) %>% 
   summarize(abundance_log2 = mean(abundance_log2))
 
-# reshape data frame
+# reshape data frame to wide format
 df_wide <- pivot_wider(df_mean, id_cols = c("systematic_name", "gene"), names_from = treatment_id, values_from = abundance_log2)
 
 treatment_combinations <- combn(colnames(df_wide)[3:ncol(df_wide)], 2, simplify = FALSE)
@@ -24,5 +24,7 @@ df_log2FC <- df_wide %>%
     return(new_col_val)
   }), sapply(treatment_combinations, paste, collapse = "_"))) 
 
-# view the resulting data frame
+# inspect the data frame
 df_log2FC
+
+write.csv(df_log2FC, "df_log2FC.csv")
