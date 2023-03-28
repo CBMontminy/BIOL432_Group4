@@ -1,0 +1,73 @@
+---
+title: "Plots"
+author: "Corbin Montminy"
+date: "2023-03-28"
+output: html_document
+---
+
+# Importing Data
+```{r}
+library(dplyr)
+library(ggplot2)
+library(gridExtra)
+```
+
+```{r}
+Data=read.csv("FinalData.csv")
+Data=Data[-1]
+head(Data)
+ncol(Data)
+FinalData<- as.data.frame(Data[,2:37])
+row.names(FinalData) <-  Data$Gene
+head(FinalData)
+```
+
+# Histogram for loop
+```{r}
+#Check columns if genes 
+
+plot_list = list()
+
+for(i in 7:36) {
+  plot_list[[i]] = print(ggplot(FinalData, aes(FinalData[,i]))+
+    geom_histogram(bins=45)+
+    xlab(colnames(FinalData)[i]))
+}
+
+print(plot_list[[8]])
+```
+
+
+```{r}
+C3=ggplot(FinalData, aes(FinalData$Log2FC_C3_UT))+
+    geom_histogram(bins=45, fill="red")+
+    labs(title="pH 3", x="Log2FC C3/UT")+
+  theme_classic()
+
+C8=ggplot(FinalData, aes(FinalData$Log2FC_C8_UT))+
+    geom_histogram(bins=45, fill="orange")+
+    labs(title="pH 8", x="Log2FC C8/UT")+
+  theme_classic()
+
+CS23=ggplot(FinalData, aes(FinalData$Log2FC_CS23_UT))+
+    geom_histogram(bins=45, fill="yellow")+
+    labs(title="23 *C", x="Log2FC CS23/UT")+
+  theme_classic()
+
+HS42=ggplot(FinalData, aes(FinalData$P_HS42_UT))+
+    geom_histogram(bins=45, fill="green")+
+    labs(title="42 *C", x="Log2FC HS42/UT")+
+  theme_classic()
+
+NC=ggplot(FinalData, aes(FinalData$Log2FC_NC_UT))+
+    geom_histogram(bins=45, fill="blue")+
+    labs(title="NaCl", x="Log2FC NC/UT")+
+  theme_classic()
+```
+
+
+
+```{r}
+grid.arrange(C3, C8, CS23, HS42, NC, ncol=2)
+```
+
