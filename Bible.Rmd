@@ -19,31 +19,22 @@ Instructions
 ```{r, echo=F}
 library(tidyr)
 library(dplyr)
+library(ggplot2)
 ```
 
 ## Loading Data
 ```{r}
-Data=read.csv("CombinedData")
+Data=read.csv("CombinedData.csv")
+Data=select(Data, c("gene", "treatment_id", "abundance_log2"))
+names(Data)=c("Gene", "Treatment", "Abundance")
 ```
 
-# Converting abundance to count
-## Back-transforming log2 data to original abundance values
-```{r}
-Count= 2^(Data$abundance_log2)
-```
-
-## Adding non-normalized data to dataframe
-```{r}
-CountDat=cbind(Data, Count)
-CountDat=select(CountDat, c("gene", "treatment_id", "Count"))
-names(CountDat)=c("Gene", "Treatment", "Count")
-```
 
 # Averaging replicates (Gene under same treatment)
 ```{r}
-AvgDat= CountDat %>%
+AvgDat= Data %>%
   group_by(Gene, Treatment) %>%
-  summarize(AvgCount=mean(Count))
+  summarize(AvgCount=mean(Abundance))
 AvgDat$AvgCount=round(AvgDat$AvgCount)
 ```
 
@@ -58,9 +49,10 @@ WideDat=AvgDat %>%
 # Seperate out character and numeric data
 ```{r}
 # Create all numeric data frame
-NumericData <- as.data.frame(WideDat[,2:8])
+NumericData <- as.data.frame(WideDat[,2:7])
 row.names(NumericData) <-  WideDat$Gene # keep unique identifiers
 ```
+
 
 # Genereate distance matrix
 ```{r}
@@ -91,7 +83,44 @@ Plot_NMDS <- merge(Plot_NMDS, AvgDat, by = "Gene", all.x=T, all.y=F)
 # Plot NMDS results 
 ```{r}
 ggplot(Plot_NMDS, aes(x = NMDS1, y = NMDS2, colour=Treatment)) +
+  geom_jitter()+
+  theme(legend.position="right")
+```
+# Converting to select by gene instead of treatment
+```{r}
+TNumDat=t(NumericData)
+```
+
+# Creating distance Matrix from transposed data
+```{r}
+TDistanceMatrix = vegdist(TNumDat, method="bray", binary=F)
+```
+
+
+# Run NMDS
+```{r}
+set.seed(39)
+TNMDSdat <- metaMDS(TDistanceMatrix, k=2, trymax = 10) # need to change 10 to a higher number, but keep low for testing
+```
+
+# Select relevant columns 
+```{r}
+TPlot_NMDS <- data.frame(NMDS1 = TNMDSdat$points[,1],
+                   NMDS2 = TNMDSdat$points[,2],
+                   Treatment = row.names(TNumDat))
+```
+
+# Add labels using merge function
+```{r}
+TPlot_NMDS <- merge(TPlot_NMDS, AvgDat, by = "Treatment", all.x=T, all.y=F)
+```
+
+# Plot NMDS results 
+```{r}
+ggplot(TPlot_NMDS, aes(x = NMDS1, y = NMDS2, colour=Treatment)) +
   geom_point() +
   theme(legend.position="right")
 ```
+
+
 

@@ -3,8 +3,10 @@ library(dplyr)
 library(tidyr)
 
 Data=read.csv("CombinedData.csv")
-Data=select(Data, c("gene", "treatment_id", "abundance_log2"))
+Data=Data[c("gene", "treatment_id", "abundance_log2")]
 names(Data)=c("Gene", "Treatment", "Abundance")
+
+
 
 AvgDat= Data %>%
   group_by(Gene, Treatment) %>%
@@ -13,12 +15,12 @@ AvgDat= Data %>%
 
 WideDat=AvgDat %>%
   pivot_wider(names_from="Treatment", values_from="AvgCount")
+NumericData <- as.data.frame(WideDat[,2:7])
+row.names(NumericData) <-  WideDat$Gene 
 
-NumericData = WideDat[, c(2:7)]
-NumericData=as.numeric(NumericData)
+
 NumericData2=NumericData
-NumericData2$C3=as.numeric(NumericData2$C3)
-NumericData2$C8=as.numeric(NumericData2$C8)
+
 
 
 for(i in 1:5) {
@@ -40,6 +42,11 @@ for (i in 1:5) {
   }
 }
 
-ncol(NumericData2)
-FinalData=cbind(Data[1], NumericData,NumericData2[7:21])
+
+
+FinalData=cbind(WideDat[1], NumericData,NumericData2[7:21])
+
+nrow(WideDat)
+nrow(FinalData)
 write.csv(FinalData, "FinalData.csv")
+
