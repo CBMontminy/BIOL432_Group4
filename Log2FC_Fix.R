@@ -34,15 +34,16 @@ for(i in 1:5) {
 
 
 
-
 for (i in 1:5) {
   for (j in (i+1):6) {
     colname=paste0("P_", names(NumericData2)[i], "_", names(NumericData2)[j])
-    NumericData2[[colname]]= pbinom(2^NumericData2[[i]], round(2^NumericData2[[i]] + 2^NumericData2[[j]]), p=0.5)
+    NumericData2[[colname]]=NA
+      NumericData2[NumericData2[i] < NumericData2[j],colname]= pbinom(2^NumericData2[[i]], 
+                                      round(2^NumericData2[[i]] + 2^NumericData2[[j]]), p=0.5)[NumericData2[i] < NumericData2[j]]
+      NumericData2[NumericData2[i] >= NumericData2[j],colname]= pbinom(2^NumericData2[[j]], 
+                                                                        round(2^NumericData2[[i]] + 2^NumericData2[[j]]), p=0.5)[NumericData2[i] >= NumericData2[j]]
   }
 }
-
-
 
 FinalData=cbind(WideDat[1], NumericData,NumericData2[7:21])
 

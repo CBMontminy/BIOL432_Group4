@@ -22,20 +22,6 @@ row.names(FinalData) <-  Data$Gene
 head(FinalData)
 ```
 
-# Histogram for loop
-```{r}
-#Check columns if genes 
-
-plot_list = list()
-
-for(i in 7:36) {
-  plot_list[[i]] = print(ggplot(FinalData, aes(FinalData[,i]))+
-    geom_histogram(bins=45)+
-    xlab(colnames(FinalData)[i]))
-}
-
-print(plot_list[[8]])
-```
 
 
 ```{r}
@@ -54,7 +40,7 @@ CS23=ggplot(FinalData, aes(FinalData$Log2FC_CS23_UT))+
     labs(title="23 *C", x="Log2FC CS23/UT")+
   theme_classic()
 
-HS42=ggplot(FinalData, aes(FinalData$P_HS42_UT))+
+HS42=ggplot(FinalData, aes(FinalData$Log2FC_HS42_UT))+
     geom_histogram(bins=45, fill="green")+
     labs(title="42 *C", x="Log2FC HS42/UT")+
   theme_classic()
