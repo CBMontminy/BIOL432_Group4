@@ -1,0 +1,31 @@
+---
+title: "Bonferonni Correction"
+output: html_notebook
+---
+
+# Bonferroni correction
+```{r}
+# load library
+library(tidyverse)
+
+# load dataframe that contains p-value column 
+DataP=read.csv("protein_diff_reg.csv")
+```
+
+# Run Bonferonni 
+```{r}
+# Change DataP$p_value to correspond with your dataframe and p-value column name 
+pAdj <- p.adjust(DataP$p_value, method = 'bonferroni')
+```
+
+# Subset dataframe to only include significant p-values
+```{r}
+# I selected a 0.05 cut-off, but may have to change that based on our results 
+DataP %>% 
+  mutate(p_adjusted=pAdj) %>%
+  filter(p_adjusted <= 0.05)
+```
+
+NEXT
+- let me (Marin) know when you get to this part. 
+- I think we could run g:profiler on the list of significant genes to see if there are any trends. 
