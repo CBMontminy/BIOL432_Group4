@@ -121,6 +121,3 @@ ggplot(TPlot_NMDS, aes(x = NMDS1, y = NMDS2, colour=Treatment)) +
   geom_point() +
   theme(legend.position="right")
 ```
-
-
-

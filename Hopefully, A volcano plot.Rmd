@@ -1,0 +1,92 @@
+---
+title: "Hopefully, A Volcano Plot"
+author: "Braeden Grenier"
+date: "2023-03-28"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+install.packages(Enhanced)
+BiocManager::install('EnhancedVolcano')
+library(EnhancedVolcano)
+```
+
+```{r}
+Data = read.csv("FinalData.csv")
+Data
+```
+
+```{r}
+Data=read.csv("FinalData.csv")
+Data=Data[-1]
+head(Data)
+ncol(Data)
+workingdata<- as.data.frame(Data[,2:37])
+row.names(workingdata) <-  Data$Gene
+head(workingdata)
+```
+
+
+This graph plots the -log10fold change of the P value on the x axis, with the -log10(pvalue) on the y axis. 
+```{r}
+library(ggplot2)
+```
+
+# Volcano Plotting
+```{r}
+C3plot = ggplot(workingdata, aes(x = Log2FC_C3_UT, y = -log10(P_C3_UT))) + geom_point(aes(color = ifelse(P_C3_UT < 0.05 & abs(Log2FC_C3_UT) > 1, "Significant", "Not Significant"))) + guides(color = guide_legend(title = NULL)) + xlab("Log2 Fold Change") + ylab("-log10 P Value") + ggtitle("pH3") + theme_classic()
+C3plot
+
+C8plot = ggplot(workingdata, aes(x = Log2FC_C8_UT, y = -log10(P_C8_UT))) + geom_point(aes(color = ifelse(P_C8_UT < 0.05 & abs(Log2FC_C8_UT) > 1, "Significant", "Not Significant"))) + guides(color = guide_legend(title = NULL)) + xlab("Log2 Fold Change") + ylab("-log10 P Value") + ggtitle("pH8") + theme_classic()
+C8plot
+
+CS23plot = ggplot(workingdata, aes(x = Log2FC_CS23_UT, y = -log10(P_CS23_UT))) + geom_point(aes(color = ifelse(P_CS23_UT < 0.05 & abs(Log2FC_CS23_UT) > 1, "Significant", "Not Significant"))) + guides(color = guide_legend(title = NULL)) + xlab("Log2 Fold Change") + ylab("-log10 P Value") + ggtitle("23*C") + theme_classic()
+CS23plot
+
+HS42plot = ggplot(workingdata, aes(x = Log2FC_HS42_UT, y = -log10(P_HS42_UT))) + geom_point(aes(color = ifelse(P_HS42_UT < 0.05 & abs(Log2FC_HS42_UT) > 1, "Significant", "Not Significant"))) + guides(color = guide_legend(title = NULL)) + xlab("Log2 Fold Change") + ylab("-log10 P Value") + ggtitle("42*C") + theme_classic()
+HS42plot
+
+NCplot = ggplot(workingdata, aes(x = Log2FC_NC_UT, y = -log10(P_NC_UT))) + geom_point(aes(color = ifelse(P_NC_UT < 0.05 & abs(Log2FC_NC_UT) > 1, "Significant", "Not Significant"))) + guides(color = guide_legend(title = NULL)) + xlab("Log2 Fold Change") + ylab("-log10 P Value") + ggtitle("NaCl") + theme_classic()
+NCplot
+```
+
+## Grid arranging
+```{r}
+grid.arrange(C3plot, C8plot, CS23plot, HS42plot, NCplot, ncol=2)j
+```
+
+## Below is example code of how to remove data from a plot
+```{r}
+c3plotdata = ggplot_build(C3plot)
+c3plotdata
+
+layer_data(C3plot, 1)
+```
+
+# Bonferroni correction
+```{r}
+# load library
+library(tidyverse)
+
+# load dataframe that contains p-value column 
+DataP=read.csv("protein_diff_reg.csv")
+DataP
+```
+
+# Run Bonferonni 
+```{r}
+# Change DataP$p_value to correspond with your dataframe and p-value column name 
+pAdj <- p.adjust(DataP$p_value, method = 'bonferroni')
+```
+
+# Subset dataframe to only include significant p-values
+```{r}
+# I selected a 0.05 cut-off, but may have to change that based on our results 
+DataP %>% 
+  mutate(p_adjusted=pAdj) %>%
+  filter(p_adjusted <= 0.05)
+```
