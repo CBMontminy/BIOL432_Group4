@@ -2,7 +2,9 @@
 title: "Plots"
 author: "Corbin Montminy"
 date: "2023-03-28"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 ---
 
 # Importing Data
@@ -54,6 +56,6 @@ NC=ggplot(FinalData, aes(FinalData$Log2FC_NC_UT))+
 
 
 ```{r}
-grid.arrange(C3, C8, CS23, HS42, NC, ncol=2)
+Histo=grid.arrange(C3, C8, CS23, HS42, NC, ncol=2)
 ```
 

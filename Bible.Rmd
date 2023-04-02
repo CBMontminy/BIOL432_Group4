@@ -2,7 +2,9 @@
 title: "Bible 2.0"
 author: "Marin H"
 date: "2023-03-23"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 ---
 
 
@@ -83,8 +85,8 @@ Plot_NMDS <- merge(Plot_NMDS, AvgDat, by = "Gene", all.x=T, all.y=F)
 # Plot NMDS results 
 ```{r}
 ggplot(Plot_NMDS, aes(x = NMDS1, y = NMDS2, colour=Treatment)) +
-  geom_jitter()+
-  theme(legend.position="right")
+  geom_jitter(width = 0.001, height = 0.001)+
+  theme(legend.position="right")+ theme_classic()
 ```
 # Converting to select by gene instead of treatment
 ```{r}
@@ -118,8 +120,9 @@ TPlot_NMDS <- merge(TPlot_NMDS, AvgDat, by = "Treatment", all.x=T, all.y=F)
 # Plot NMDS results 
 ```{r}
 ggplot(TPlot_NMDS, aes(x = NMDS1, y = NMDS2, colour=Treatment)) +
-  geom_point() +
-  theme(legend.position="right")
+  geom_jitter(width = 0.001, height = 0.001, alpha=0.5, shape=3) +
+  theme(legend.position="right")+
+  theme_classic()
 ```
 
 
