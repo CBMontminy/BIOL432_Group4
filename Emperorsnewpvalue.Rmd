@@ -1,0 +1,56 @@
+---
+title: "I really hope this gives P values"
+author: "Braeden Grenier"
+date: "2023-04-02"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+So I think I have to remove all the P values from the ??? dataset, along with their gene ID, and then perform a bonferroni correction on all of them, then use the significance data from that and use it to plot the 
+
+```{r}
+okwhat = read.csv("FinalData.csv")
+okwhat
+```
+
+```{r}
+hmm = data.frame(Gene = okwhat$Gene, 
+                 PC3 = okwhat$P_C3_UT, 
+                 PC8 = okwhat$P_C8_UT,
+                 CS23 = okwhat$P_CS23_UT,
+                 HS42 = okwhat$P_HS42_UT,
+                 NC = okwhat$P_NC_UT)
+hmm
+```
+
+# Run Bonferonni, yeeaAAH!
+```{r}
+# Change DataP$p_value to correspond with your dataframe and p-value column name 
+PC3Adj <- p.adjust(hmm$PC3, method = 'bonferroni')
+PC8Adj = p.adjust(hmm$PC8, method = "bonferroni")
+PCS23 = p.adjust(hmm$CS23, method = "bonferroni")
+HS42Adj = p.adjust(hmm$HS42, method = "bonferroni")
+PCAdj = p.adjust(hmm$NC, method = "bonferroni")
+```
+
+# Dataframe of P values
+```{r}
+Emperorsnewpvalues = data.frame(Gene = okwhat$Gene, 
+                 PC3 = PC3Adj, 
+                 PC8 = PC8Adj,
+                 CS23 = PCS23,
+                 HS42 = HS42Adj,
+                 NC = PCAdj)
+Emperorsnewpvalues
+```
+
+# Subset dataframe to only include significant p-values
+```{r}
+# I selected a 0.05 cut-off, but may have to change that based on our results 
+Emperorsnewpvalues %>% 
+  mutate(p_adjusted=pAdj) %>%
+  filter(p_adjusted <= 0.05)
+```
