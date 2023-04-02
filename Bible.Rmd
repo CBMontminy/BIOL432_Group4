@@ -120,7 +120,6 @@ TPlot_NMDS <- merge(TPlot_NMDS, AvgDat, by = "Treatment", all.x=T, all.y=F)
 # Plot NMDS results 
 ```{r}
 ggplot(TPlot_NMDS, aes(x = NMDS1, y = NMDS2, colour=Treatment)) +
-<<<<<<< HEAD
   geom_jitter(width = 0.001, height = 0.001, alpha=0.5, shape=3) +
   theme(legend.position="right")+
   theme_classic()
